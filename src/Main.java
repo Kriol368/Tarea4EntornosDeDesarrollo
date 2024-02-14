@@ -81,7 +81,7 @@ public class Main {
         }
         return primos;
     }
-
+//
     private static int cuantosPrimos(int dim, boolean[] esPrimo) {
         int i;
         int cuenta = 0;
