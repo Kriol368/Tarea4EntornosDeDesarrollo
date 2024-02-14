@@ -6,16 +6,24 @@ public class Main {
         System.out.println("Introduce el número para la criba de Erastótenes:");
         int dato = teclado.nextInt();
         int vector[] = new int[dato];
-        System.out.println("\nVector inicial hasta :" + dato);
-        for (int i = 0; i < vector.length; i++) {
-            if (i % 10 == 0) System.out.println();
-            System.out.print(i + 1 + "\t");
-        }
+        imprimirVectorInicial(dato, vector);
         vector = generarPrimos(dato);
+        imprimirVectorPrimos(dato, vector);
+    }
+
+    private static void imprimirVectorPrimos(int dato, int[] vector) {
         System.out.println("\nVector de primos hasta:" + dato);
         for (int i = 0; i < vector.length; i++) {
             if (i % 10 == 0) System.out.println();
             System.out.print(vector[i] + "\t");
+        }
+    }
+
+    private static void imprimirVectorInicial(int dato, int[] vector) {
+        System.out.println("\nVector inicial hasta :" + dato);
+        for (int i = 0; i < vector.length; i++) {
+            if (i % 10 == 0) System.out.println();
+            System.out.print(i + 1 + "\t");
         }
     }
 
@@ -30,29 +38,56 @@ public class Main {
             for (i = 0; i < dim; i++)
                 esPrimo[i] = true;
 // Eliminar el 0 y el 1, que no son primos
-            esPrimo[0] = esPrimo[1] = false;
+            eliminar0Y1(esPrimo);
 // Criba
-            for (i = 2; i < Math.sqrt(dim) + 1; i++) {
-                if (esPrimo[i]) {
-// Eliminar los múltiplos de i
-                    for (j = 2 * i; j < dim; j += i)
-                        esPrimo[j] = false;
-                }
-            }
+            criba(dim, esPrimo);
 // ¿Cuántos primos hay?
-            int cuenta = 0;
-            for (i = 0; i < dim; i++) {
-                if (esPrimo[i]) cuenta++;
-            }
+            int cuenta = cuantosPrimos(dim, esPrimo);
 // Rellenar el vector de números primos
-            int[] primos = new int[cuenta];
-            for (i = 0, j = 0; i < dim; i++) {
-                if (esPrimo[i]) primos[j++] = i;
-            }
+            int[] primos = rellenarVector(cuenta, dim, esPrimo);
             return primos;
         } else { // max < 2
             return new int[0];
 // Vector vacío
         }
+    }
+
+    private static void eliminar0Y1(boolean[] esPrimo) {
+        esPrimo[0] = esPrimo[1] = false;
+    }
+
+    private static void criba(int dim, boolean[] esPrimo) {
+        int i;
+        for (i = 2; i < Math.sqrt(dim) + 1; i++) {
+            if (esPrimo[i]) {
+// Eliminar los múltiplos de i
+                eliminarMultiplosDei(i, dim, esPrimo);
+            }
+        }
+    }
+
+    private static void eliminarMultiplosDei(int i, int dim, boolean[] esPrimo) {
+        int j;
+        for (j = 2 * i; j < dim; j += i)
+            esPrimo[j] = false;
+    }
+
+    private static int[] rellenarVector(int cuenta, int dim, boolean[] esPrimo) {
+        int i;
+        int j;
+        int[] primos = new int[cuenta];
+        for (i = 0, j = 0; i < dim; i++) {
+            if (esPrimo[i]) primos[j++] = i;
+        }
+        return primos;
+    }
+
+    private static int cuantosPrimos(int dim, boolean[] esPrimo) {
+        int i;
+        int cuenta = 0;
+        for (i = 0; i < dim; i++) {
+            if (esPrimo[i]) cuenta++;
+        }
+        return cuenta;
     }
 }
